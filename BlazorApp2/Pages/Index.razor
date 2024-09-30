@@ -1,0 +1,57 @@
+﻿@* @page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" /> *@
+
+@page "/"
+
+<h3>To-Do List</h3>
+
+<div class="input-group mb-3">
+    <input type="text" class="form-control" @bind="newTodo" placeholder="Add a new task..." />
+    <button class="btn btn-primary" @onclick="AddTodo">Add</button>
+</div>
+
+<ul class="list-group">
+    @foreach (var todo in todos)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" @bind="todo.IsCompleted" />
+                <label class="form-check-label @(todo.IsCompleted ? "completed" : "")">@todo.Description</label>
+            </div>
+            <button class="btn btn-danger btn-sm" @onclick="@(() => RemoveTodo(todo))">Delete</button>
+        </li>
+    }
+</ul>
+
+@code {
+    private List<TodoItem> todos = new List<TodoItem>();
+    private string newTodo;
+
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            todos.Add(new TodoItem { Description = newTodo, IsCompleted = false });
+            newTodo = string.Empty; // Clear input field
+        }
+    }
+
+    private void RemoveTodo(TodoItem todo)
+    {
+        todos.Remove(todo);
+    }
+
+    public class TodoItem
+    {
+        public string Description { get; set; }
+        public bool IsCompleted { get; set; }
+    }
+}
+
